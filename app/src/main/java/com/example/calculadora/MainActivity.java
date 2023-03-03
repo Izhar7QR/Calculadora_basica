@@ -51,14 +51,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MaterialButton button = (MaterialButton) view;
         String buttonText = button.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
-
-        if (buttonText.equals("AC")) {
+        if(buttonText.equals("AC")){
             solutionTv.setText("");
             resultTv.setText("0");
             return;
         }
-
-        if (buttonText.equals("=")) {
+        if(buttonText.equals("=")){
             String finalResult = getResult(dataToCalculate);
             if (!finalResult.equals("Err")) {
                 resultTv.setText(finalResult);
@@ -66,17 +64,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             solutionTv.setText("");
             return;
         }
-
-        if (buttonText.equals("C")) {
+        if(buttonText.equals("C")){
             if (dataToCalculate.length() > 0) {
                 dataToCalculate =
-                        dataToCalculate.substring(0, dataToCalculate.length() - 1);
+                        dataToCalculate.substring(0,dataToCalculate.length()-1);
             }
         } else {
-            dataToCalculate = dataToCalculate + buttonText;
+            if (buttonText.equals(")")) {
+                int openBracketCount = countOccurrences(dataToCalculate, '(');
+                int closeBracketCount = countOccurrences(dataToCalculate, ')');
+                if (openBracketCount > closeBracketCount) {
+                    dataToCalculate += buttonText + "*";
+                } else {
+                    dataToCalculate += buttonText;
+                }
+            } else {
+                dataToCalculate += buttonText;
+            }
         }
-
         solutionTv.setText(dataToCalculate);
+    }
+    int countOccurrences(String str, char c) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == c) {
+                count++;
+            }
+        }
+        return count;
     }
     String getResult(String data){
         try{
